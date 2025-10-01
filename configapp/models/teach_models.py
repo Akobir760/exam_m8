@@ -1,9 +1,9 @@
 from django.db import models
 
-from . import Organization
+from .staff_model import Organization
 
 
-from ..models import *
+from .group_models import Group
 
 
 class Course(models.Model):
@@ -27,7 +27,7 @@ class Student(models.Model):
     phone = models.CharField(max_length=15, blank=True, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     is_activate = models.BooleanField(default=False)
-    group = models.ManyToManyField("Group",related_name='group')
+    group = models.ManyToManyField(Group,related_name='group')
     descriptions = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
