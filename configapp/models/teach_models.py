@@ -5,7 +5,6 @@ from .staff_model import Organization
 
 from .group_models import Group
 
-
 class Course(models.Model):
     title = models.CharField(max_length=255, unique=True)
 

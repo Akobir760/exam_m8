@@ -1,5 +1,5 @@
 from django.db import models
-from .auth_user import User
+from .auth_user import AccountModel
 
 
 class Region(models.Model):
@@ -18,7 +18,7 @@ class Organization(models.Model):
 
 
 class ManagerOrganization(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(AccountModel, on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
