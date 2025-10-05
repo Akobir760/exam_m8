@@ -21,6 +21,7 @@ class AccountModel(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     full_name = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(blank=True, null=True)
+    otp = models.CharField(max_length=6, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)

@@ -2,7 +2,7 @@ from django.db import models
 
 
 from .teach_models import Student
-from . group_models import Group
+from .group_models import Group
 
 
 class AttendanceLevel(models.Model):
