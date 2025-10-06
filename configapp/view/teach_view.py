@@ -141,7 +141,7 @@ class StudentAPIView(APIView):
         
 class UpdateStudentApi(APIView):
 
-    @swagger_auto_schema(request_body=StudentSerializer)
+    # @swagger_auto_schema(request_body=StudentSerializer)
     def put(self, request, pk):
         try:
             user = Student.objects.get(pk=pk)
@@ -221,7 +221,7 @@ class StudentGroupsAPIView(APIView):
         groups = student.group.all()  
         serializer = GroupSerializer(groups, many=True)
         return Response({
-            "student": student.user.full_name if student.user.full_name else student.user.username,
+            "student": student.user.username,
             "groups": serializer.data
         }, status=status.HTTP_200_OK)
     
