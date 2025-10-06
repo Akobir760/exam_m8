@@ -20,7 +20,7 @@ class GroupsListAPI(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
 
-class GroupCreate(APIView):
+class GroupCreateAPIView(APIView):
     @swagger_auto_schema(request_body=GroupSerializer)
     def post(self, request):
         serializer = GroupSerializer(data=request.data)

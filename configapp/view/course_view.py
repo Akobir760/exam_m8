@@ -2,6 +2,7 @@ from rest_framework.views import APIView, Response, status
 from configapp.serializers.course_serializer import *
 from drf_yasg.utils import swagger_auto_schema
 from configapp.serializers.group_serializer import GroupSerializer
+from configapp.models import Group
 
 class CourseCreateAPIView(APIView):
     @swagger_auto_schema(request_body=CourseSerializer)

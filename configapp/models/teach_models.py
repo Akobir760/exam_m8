@@ -1,8 +1,8 @@
 from django.db import models
 
 # from .staff_model import Organization
-from .group_models import Group
-from .auth_user import AccountModel
+# from .group_models import Group
+# from .auth_user import AccountModel
 
 class Course(models.Model):
     title = models.CharField(max_length=255, unique=True)
@@ -12,7 +12,7 @@ class Course(models.Model):
 
 
 class Teacher(models.Model):
-    user = models.ForeignKey(AccountModel, on_delete=models.CASCADE)
+    user = models.ForeignKey("configapp.AccountModel", on_delete=models.CASCADE)
     descriptions = models.CharField(max_length=500, null=True, blank=True)
     is_staff = models.BooleanField(default=True)
     is_manager = models.BooleanField(default=True)
@@ -23,10 +23,10 @@ class Teacher(models.Model):
 
 
 class Student(models.Model):
-    user = models.ForeignKey(AccountModel, on_delete=models.CASCADE)
+    user = models.ForeignKey("configapp.AccountModel", on_delete=models.CASCADE)
     # organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     is_activate = models.BooleanField(default=False)
-    group = models.ManyToManyField(Group,related_name='group')
+    group = models.ManyToManyField("configapp.Group",related_name='group')
     descriptions = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):

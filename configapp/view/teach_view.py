@@ -25,7 +25,9 @@ class TeacherApiView(APIView):
             teachers = Teacher.objects.all()
             serializer = TeacherSeriallizer(teachers, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-    
+        
+
+class TeacherCreateAPI(APIView):
     @swagger_auto_schema(request_body=TeacherSeriallizer)
     def post(self, request):
         serializer = TeacherSeriallizer(data=request.data)
@@ -84,6 +86,36 @@ class TeacherGroupsAPIView(APIView):
         }, status=status.HTTP_200_OK)
     
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from configapp.models.teach_models import Teacher
+from configapp.models.group_models import Group
+from configapp.serializers.group_serializer import GroupSerializer
+
+class TeacherGroupDetailView(APIView):
+    def get(self, request, teacher_id, group_id):
+        try:
+            teacher = Teacher.objects.get(id=teacher_id)
+        except Teacher.DoesNotExist:
+            return Response(
+                {"error": "Teacher not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            group = Group.objects.get(id=group_id, teacher=teacher)
+        except Group.DoesNotExist:
+            return Response(
+                {"error": "Group not found or does not belong to this teacher"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = GroupSerializer(group)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    
+
 
 class TeacherAttendanceByMonthAPIView(APIView):
     def get(self, request, student_id):
@@ -120,7 +152,18 @@ class StudentAPIView(APIView):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class StudentAPIView(APIView):
+    @swagger_auto_schema(request_body=StudentSerializer)
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class StudentsListAPI(APIView):
     def get(self, request, pk):
         if pk:
             try:
@@ -141,7 +184,7 @@ class StudentAPIView(APIView):
         
 class UpdateStudentApi(APIView):
 
-    # @swagger_auto_schema(request_body=StudentSerializer)
+    @swagger_auto_schema(request_body=StudentSerializer)
     def put(self, request, pk):
         try:
             user = Student.objects.get(pk=pk)
@@ -157,7 +200,7 @@ class UpdateStudentApi(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
-class UsersAPIVIew(APIView):
+class UsersListAPIVIew(APIView):
     def get(self, request):
         teachers = Teacher.objects.all()
         students = Student.objects.all()
@@ -246,6 +289,6 @@ class StudentAttendanceByMonthAPIView(APIView):
             grouped_data[month_key].append(att)
 
         return Response({
-            "student": student.user.full_name if hasattr(student.user, 'full_name') else str(student.user),
+            "student": student.user.username ,
             "attendance_by_month": grouped_data
         }, status=status.HTTP_200_OK)

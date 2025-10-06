@@ -1,9 +1,6 @@
 from django.db import models
 
 
-from .teach_models import Student
-from .group_models import Group
-
 
 class AttendanceLevel(models.Model):
 
@@ -18,8 +15,8 @@ class Attendance(models.Model):
     level = models.ForeignKey(AttendanceLevel, on_delete=models.RESTRICT)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    student = models.ForeignKey(Student, on_delete=models.RESTRICT)
-    group = models.ForeignKey(Group, on_delete=models.RESTRICT)
+    student = models.ForeignKey("configapp.Student", on_delete=models.RESTRICT)
+    group = models.ForeignKey("configapp.Group", on_delete=models.RESTRICT)
 
     def __str__(self):
         return self.level
