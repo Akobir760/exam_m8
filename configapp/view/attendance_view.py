@@ -2,9 +2,11 @@ from rest_framework.views import APIView
 from configapp.serializers.attendance_serializer import *
 from rest_framework.views import Response, status
 from drf_yasg.utils import swagger_auto_schema
+from configapp.models.permmissions import *
 
 
 class AttendanceRetrieveAPiView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def get(self, request, pk):
         if pk:
             try:
@@ -25,6 +27,7 @@ class AttendanceRetrieveAPiView(APIView):
     
 
 class AttendaceCreateAPIView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     @swagger_auto_schema(request_body=AttendanceSerializer)
     def post(self, request):
         serializer = AttendanceSerializer(data=request.data)
@@ -36,6 +39,7 @@ class AttendaceCreateAPIView(APIView):
     
 
 class AttendanceUpdateAPIView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def put(self, request, pk):
         try:
             attendance = Attendance.objects.get(pk=pk)
@@ -51,6 +55,7 @@ class AttendanceUpdateAPIView(APIView):
     
 
 class AttendanceDeleteAPIView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def post(self, request, pk):
         attendance = Attendance.objects.get(pk=pk)
         if attendance:
@@ -62,6 +67,7 @@ class AttendanceDeleteAPIView(APIView):
 
 
 class AttendanceLevelAPIView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     @swagger_auto_schema(request_body=AttendaceLevelSerializer)
     def post(self, request):
         serializer = AttendaceLevelSerializer(data=request.data)
@@ -73,6 +79,7 @@ class AttendanceLevelAPIView(APIView):
     
 
 class AttendanceLevelGetAPIView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def get(self, request, pk):
         if pk:
             try:
@@ -90,6 +97,7 @@ class AttendanceLevelGetAPIView(APIView):
     
 
 class AttendanceLevelDeleteAPI(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def post(self, request, pk):
         attendance_level = AttendanceLevel.objects.get(pk=pk)
 
@@ -101,6 +109,7 @@ class AttendanceLevelDeleteAPI(APIView):
 
 
 class AttendanceLevelUpdateAPI(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def put(self, request, pk):
         attendance_level = AttendanceLevel.objects.get()
         if attendance_level:

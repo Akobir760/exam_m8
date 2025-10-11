@@ -72,4 +72,57 @@ urlpatterns = [
     path("courses/groups/{id}/remove-student/", RemoveStudentFromGroupAPIView.as_view()),
     path("courses/groups/{id}/remove-teacher/", RemoveTeacherFromGroupAPIView.as_view()),
     path("courses/groups/{id}/update/group/", GroupUpdateAPI.as_view()),
+
+
+    # HOMEWORKS API
+    path("courses/homework-reviews/", HomeworkReviewListAPI.as_view()),
+    path("courses/homework-reviews/create/homework-review/", HomeworkReviewCreateAPI.as_view()),
+    path("courses/homework-reviews/{id}/", HomeworkReviewListAPI.as_view()),
+    path("courses/homework-reviews/{id}/delete/homework-review/", HomeworkReviewDelAPI.as_view()),
+    path("courses/homework-reviews/{id}/update/homework-review/", HomeworkReviewUpdateAPI.as_view()),
+
+    path("courses/homework-submissions/", HomeworkSubmissionsListAPI.as_view()),
+    path("courses/homework-submissions/create/homework-submission/", HomewrokSubmissionCreateAPI.as_view()),
+    path("courses/homework-submissions/{id}/", HomeworkSubmissionsListAPI.as_view()),
+    path("courses/homework-submissions/{id}/delete/homework-submission/", HomeworkSubmissionDElAPI.as_view()),
+    path("courses/homework-submissions/{id}/update/homework-submission", HomeworkSubmissionUpdateAPI.as_view()),
+
+    path("courses/homeworks/", HomeworkListAPI.as_view()),
+    path("courses/homeworks/create/homework/", HomeworkCreateAPI.as_view()),
+    path("courses/homeworks/{id}/", HomeworkListAPI.as_view()),
+    path("courses/homeworks/{id}/delete/homework/ ", HomeworkUpdateAPI.as_view()),
+
+    # SUBJECT API's
+    path("courses/subjects/", SubjectListAPI.as_view()),
+    path("courses/subjects/create/subject/", SubjectCreateAPI.as_view()),
+    path("courses/subjects/{id}/ ", SubjectListAPI.as_view()),
+    path("courses/subjects/{id}/delete/subject/ ", SubjectDelAPI.as_view()),
+    path("courses/subjects/{id}/update/subject/ ", SubjectUpdateAPI.as_view()),
+
+    # TABLE API's
+    path("courses/tables/", TableListAPI.as_view()),
+    path("courses/tables/create/table/", TableCreateAPI.as_view()),
+    path("courses/tables/{id}/ ", TableListAPI.as_view()),
+    path("courses/tables/{id}/delete/table/ ", TableDelAPI.as_view()),
+    path("courses/tables/{id}/update/table/", TableUpdateAPI.as_view()),
+
+    path("courses/table-types/", TableTypeListAPI.as_view()),
+    path("courses/table-types/create/tabletype/ ", TableTypeCreateAPI.as_view()),
+    path("courses/table-types/{id}/ ", TableTypeListAPI.as_view()),
+    path("courses/table-types/{id}/delete/tabletype/ ", TableTypeDelAPI.as_view()),
+    path("courses/table-types/{id}/update/tabletype/ ", TableTypeUpdate.as_view()),
+
+    # PAYMENT API's
+    path("payments/payment-type/", PaymentTypeListAPI.as_view()),
+    path("payments/payment-type/create/payment-type/ ", PaymentTypeCreateAPI.as_view()),
+    path("payments/payment-type/{id}/ ", PaymentTypeListAPI.as_view()),
+    path("payments/payment-type/{id}/delete/payment-type/ ", PaymentDelAPI.as_view()),
+    path("payments/payment-type/{id}/update/payment-type/ ", PaymentUpdateAPI.as_view()),
+
+    path("payments/payment/", PaymnetListAPI.as_view()),
+    path("payments/payment/create/payment/", PaymentTypeCreateAPI.as_view()),
+    path("payments/payment/{id}/", PaymnetListAPI.as_view()),
+    path("payments/payment/{id}/delete/payment/", PaymentDelAPI.as_view()),
+    path("payments/payment/{id}/update/payment/", PaymentUpdateAPI.as_view()),
+    
 ]

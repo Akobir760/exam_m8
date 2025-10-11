@@ -147,3 +147,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "zulfiyasharopova9@gmail.com"        
 EMAIL_HOST_PASSWORD = "emwt dfjz uldg vvwf"    
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT tokenni kiriting. Format: **Bearer <token>**',
+        }
+    },
+    'USE_SESSION_AUTH': False,
+}
+

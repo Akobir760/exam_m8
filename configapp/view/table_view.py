@@ -10,14 +10,14 @@ class TableListAPI(APIView):
     def get(self, request, pk):
         if pk:
             try:
-                table = Table.objects.get(pk=pk)
-            except Table.DoesNotExist:
+                table = TableModel.objects.get(pk=pk)
+            except TableModel.DoesNotExist:
                 return Response({"message":"Jadval topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
             
             serializer = TableSerializer(table)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         
-        tables = Table.objects.all()
+        tables = TableModel.objects.all()
         serializer = TableSerializer(tables, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
@@ -42,8 +42,8 @@ class TableDelAPI(APIView):
 
     def delete(self, request, pk):
         try:
-            table = Table.objects.get(pk=pk)
-        except Table.DoesNotExist:
+            table = TableModel.objects.get(pk=pk)
+        except TableModel.DoesNotExist:
             return Response({"message":"Jadval topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
         
         table.delete()
@@ -55,8 +55,8 @@ class TableUpdateAPI(APIView):
 
     def put(self, request, pk):
         try:
-            table = Table.objects.get(pk=pk)
-        except Table.DoesNotExist:
+            table = TableModel.objects.get(pk=pk)
+        except TableModel.DoesNotExist:
             return Response({"message":"Jadval  topilmadi"}, status=status.HTTP_404_NOT_FOUND)
         
         serializer = TableSerializer(instance=table, data=request.data)
@@ -74,14 +74,14 @@ class TableTypeListAPI(APIView):
     def get(self, request, pk):
         if pk:
             try:
-                table_type = TableType.objects.get(pk=pk)
-            except TableType.DoesNotExist:
+                table_type = TableTypeModel.objects.get(pk=pk)
+            except TableTypeModel.DoesNotExist:
                 return Response({"message":"Table type topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
             
             serializer = TableTypeSerializer(table_type)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         
-        table_types = TableType.objects.all()
+        table_types = TableTypeModel.objects.all()
         serializer = TableTypeSerializer(table_types, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -105,8 +105,8 @@ class TableTypeDelAPI(APIView):
 
     def delete(self, request, pk):
         try:
-            table_type = TableType.objects.get(pk=pk)
-        except TableType.DoesNotExist:
+            table_type = TableTypeModel.objects.get(pk=pk)
+        except TableTypeModel.DoesNotExist:
             return Response({"message":"Jadval turi topilmadi"}, status=status.HTTP_404_NOT_FOUND)
         
         table_type.delete()
@@ -117,8 +117,8 @@ class TableTypeUpdate(APIView):
 
     def put(self, request, pk):
         try:
-            table_type = TableType.objects.get(pk=pk)
-        except TableType.DoesNotExist:
+            table_type = TableTypeModel.objects.get(pk=pk)
+        except TableTypeModel.DoesNotExist:
             return Response({"message":"Jadval turi topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = TableTypeSerializer(instance = table_type, data=request.data)

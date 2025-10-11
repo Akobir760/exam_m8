@@ -92,8 +92,10 @@ from rest_framework import status
 from configapp.models.teach_models import Teacher
 from configapp.models.group_models import Group
 from configapp.serializers.group_serializer import GroupSerializer
+from rest_framework.permissions  import IsAdminUser
 
 class TeacherGroupDetailView(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, teacher_id, group_id):
         try:
             teacher = Teacher.objects.get(id=teacher_id)
@@ -118,6 +120,7 @@ class TeacherGroupDetailView(APIView):
 
 
 class TeacherAttendanceByMonthAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, student_id):
         try:
             teacher = Teacher.objects.get(id=student_id)
@@ -144,6 +147,7 @@ class TeacherAttendanceByMonthAPIView(APIView):
     
 
 class StudentAPIView(APIView):
+    permission_classes = [IsAdminUser]
     @swagger_auto_schema(request_body=StudentSerializer)
     def post(self, request):
         serializer = StudentSerializer(data=request.data)
@@ -153,17 +157,18 @@ class StudentAPIView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class StudentAPIView(APIView):
-    @swagger_auto_schema(request_body=StudentSerializer)
-    def post(self, request):
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+# class StudentAPIView(APIView):
+#     @swagger_auto_schema(request_body=StudentSerializer)
+#     def post(self, request):
+#         serializer = StudentSerializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             serializer.save()
+#             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class StudentsListAPI(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, pk):
         if pk:
             try:
@@ -183,7 +188,7 @@ class StudentsListAPI(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         
 class UpdateStudentApi(APIView):
-
+    permission_classes = [IsAdminUser]
     @swagger_auto_schema(request_body=StudentSerializer)
     def put(self, request, pk):
         try:
@@ -201,6 +206,7 @@ class UpdateStudentApi(APIView):
     
 
 class UsersListAPIVIew(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request):
         teachers = Teacher.objects.all()
         students = Student.objects.all()
@@ -217,6 +223,7 @@ class UsersListAPIVIew(APIView):
     
 
 class SuperUserAPIView(APIView):
+    permission_classes = [IsAdminUser]
     @swagger_auto_schema(request_body=SuperUserCreateSerializer)
     def post(self, request):
         serializer = SuperUserCreateSerializer(data=request.data)
@@ -227,6 +234,7 @@ class SuperUserAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class DeleteUserAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, pk):
         user = AccountModel.objects.get(pk=pk)
         if user:
@@ -237,6 +245,7 @@ class DeleteUserAPIView(APIView):
         
 
 class GetStudentsByIdsAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request):
         ids = request.data.get("ids", [])
         
@@ -252,6 +261,7 @@ class GetStudentsByIdsAPIView(APIView):
     
 
 class StudentGroupsAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, student_id):
         try:
             student = Student.objects.get(id=student_id)
@@ -271,6 +281,7 @@ class StudentGroupsAPIView(APIView):
 
 
 class StudentAttendanceByMonthAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, student_id):
         try:
             student = Student.objects.get(id=student_id)

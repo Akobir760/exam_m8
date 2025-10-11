@@ -47,7 +47,7 @@ class ResetPasswordSerializer(serializers.Serializer):
         send_mail(
             "Password Reset Code",
             f"Your password reset code is: {otp}",
-            "no-reply@example.com",
+            "no-reply@gmail.com",
             [email],
             fail_silently=True,
         )
@@ -97,9 +97,25 @@ class SetNewPasswordSerializer(serializers.Serializer):
 class ResetPasswordRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
+import random
+from rest_framework import serializers
+
+import random
+from rest_framework import serializers
+
 class VerifyOTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    otp = serializers.CharField(max_length=6)
+    otp = serializers.CharField(max_length=6, read_only=True)
+
+    def validate(self, attrs):
+        # Tasodifiy 6 xonali OTP yaratamiz
+        random_otp = str(random.randint(100000, 999999))
+        attrs["otp"] = random_otp  # shu yerda qo‘shiladi
+        print(f"✅ OTP yuborildi: {random_otp}")  # (email yoki SMS orqali yuborish joyi)
+        return attrs
+
+
+
 
 class SetNewPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()

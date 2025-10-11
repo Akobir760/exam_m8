@@ -3,11 +3,11 @@ from configapp.models.tables import *
 
 class TableTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TableType
+        model = TableTypeModel
         fields = "__all__"
 
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Table
+        model = TableModel
         fields = "__all__"

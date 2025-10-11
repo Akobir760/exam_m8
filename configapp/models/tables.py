@@ -3,7 +3,7 @@ from django.db import models
 # from configapp.models.group_models import Group
 
 
-class TableType(models.Model):
+class TableTypeModel(models.Model):
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True, blank=True)
 
@@ -11,10 +11,10 @@ class TableType(models.Model):
         return self.title
 
 
-class Table(models.Model):
+class TableModel(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
-    table_type = models.ForeignKey(TableType, on_delete=models.CASCADE, related_name='tables')
+    table_type = models.ForeignKey(TableTypeModel, on_delete=models.CASCADE, related_name='tables')
     teacher = models.ForeignKey("configapp.Teacher", on_delete=models.CASCADE, related_name='tables')
     group = models.ForeignKey("configapp.Group", on_delete=models.CASCADE, related_name='tables')
     date = models.DateField()

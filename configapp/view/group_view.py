@@ -2,9 +2,12 @@ from rest_framework.views import APIView, Response, status
 from configapp.serializers.group_serializer import *
 from drf_yasg.utils import swagger_auto_schema
 from configapp.models.teach_models import *
+from rest_framework.permissions import IsAdminUser
+from configapp.models.permmissions import *
 
 
 class GroupsListAPI(APIView):
+    permission_classes = [IsAdminUser]
     def get(self, request, pk):
         if pk:
             try:
@@ -21,6 +24,7 @@ class GroupsListAPI(APIView):
     
 
 class GroupCreateAPIView(APIView):
+    permission_classes = [IsAdminUser]
     @swagger_auto_schema(request_body=GroupSerializer)
     def post(self, request):
         serializer = GroupSerializer(data=request.data)
@@ -32,6 +36,7 @@ class GroupCreateAPIView(APIView):
     
 
 class GroupDeleteAPI(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, pk):
         group = Group.objects.get(pk=pk)
         if group:
@@ -41,6 +46,7 @@ class GroupDeleteAPI(APIView):
             return Response({"message":"Guruh topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
         
 class GroupUpdateAPI(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def put(self, request, pk):
         try:
             group = Group.objects.get(pk=pk)
@@ -55,6 +61,7 @@ class GroupUpdateAPI(APIView):
 
 
 class AddStudentToGroupAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, id):  
         student_id = request.data.get("student_id")
 
@@ -79,6 +86,7 @@ class AddStudentToGroupAPIView(APIView):
 
 
 class RemoveStudentFromGroupAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, id): 
         student_id = request.data.get("student_id")
 
@@ -107,6 +115,7 @@ class RemoveStudentFromGroupAPIView(APIView):
 
 
 class AddTeacherToGroupAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, id):  
         teacher_id = request.data.get("teacher_id")
 
@@ -132,6 +141,7 @@ class AddTeacherToGroupAPIView(APIView):
 
 
 class RemoveTeacherFromGroupAPIView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, id): 
         teacher_id = request.data.get("teacher_id")
 

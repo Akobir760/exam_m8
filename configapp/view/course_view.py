@@ -3,8 +3,11 @@ from configapp.serializers.course_serializer import *
 from drf_yasg.utils import swagger_auto_schema
 from configapp.serializers.group_serializer import GroupSerializer
 from configapp.models import Group
+from rest_framework.permissions import IsAdminUser
+from configapp.models.permmissions import *
 
 class CourseCreateAPIView(APIView):
+    permission_classes = [IsAdminUser]
     @swagger_auto_schema(request_body=CourseSerializer)
     def post(self, request):
         serializer = CourseSerializer(data=request.data)
@@ -16,6 +19,7 @@ class CourseCreateAPIView(APIView):
     
 
 class CourseGetAPIView(APIView):
+    permission_classes = [IsManagerOrAdmin]
     def get(self, request, pk):
         if pk:
             try:
@@ -42,6 +46,7 @@ class CourseGetAPIView(APIView):
         
 
 class CourseDeleteAPI(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, pk):
         try:
             course = Course.objects.get(pk=pk)
@@ -53,6 +58,7 @@ class CourseDeleteAPI(APIView):
     
 
 class CourseChangeAPI(APIView):
+    permission_classes = [IsAdminUser]
     def put(self, request, pk):
         try:
             course = Course.objects.get(pk=pk)
@@ -68,6 +74,7 @@ class CourseChangeAPI(APIView):
     
 
 class GetGroupsByIdsApiView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request):
         ids = request.data.get("ids", [])
         if not ids:

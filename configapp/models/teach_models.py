@@ -1,8 +1,22 @@
 from django.db import models
 
-# from .staff_model import Organization
-# from .group_models import Group
-# from .auth_user import AccountModel
+
+from django.db import models
+from django.utils import timezone
+from datetime import timedelta
+
+class OTPCode(models.Model):
+    email = models.EmailField()
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expire_time = models.DateTimeField()
+
+    def is_expired(self):
+        return timezone.now() > self.expire_time
+
+    def __str__(self):
+        return f"{self.email} - {self.code}"
+
 
 class Course(models.Model):
     title = models.CharField(max_length=255, unique=True)
