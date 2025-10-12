@@ -17,7 +17,7 @@ class TableModel(models.Model):
     table_type = models.ForeignKey(TableTypeModel, on_delete=models.CASCADE, related_name='tables')
     teacher = models.ForeignKey("configapp.Teacher", on_delete=models.CASCADE, related_name='tables')
     group = models.ForeignKey("configapp.Group", on_delete=models.CASCADE, related_name='tables')
-    date = models.DateField()
+    # date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
 

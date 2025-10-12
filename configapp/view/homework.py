@@ -6,7 +6,7 @@ from configapp.models.permmissions import *
 
 class HomeworkReviewListAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 homework_review = HomeworkReview.objects.get(pk=pk)
@@ -71,7 +71,7 @@ class HomeworkReviewUpdateAPI(APIView):
 class HomeworkSubmissionsListAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 homework_submission = HomeworkSubmission.objects.get(pk=pk)
@@ -117,6 +117,7 @@ class HomeworkSubmissionDElAPI(APIView):
 
 class HomeworkSubmissionUpdateAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
+    @swagger_auto_schema(request_body=HomeworkSubmissionSerializer)
 
     def put(self, request, pk):
         try:
@@ -135,7 +136,7 @@ class HomeworkSubmissionUpdateAPI(APIView):
 class HomeworkListAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 homework = Homework.objects.get(pk=pk)
@@ -200,7 +201,7 @@ class HomeworkUpdateAPI(APIView):
 class SubjectListAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 subject = Subject.objects.get(pk=pk)

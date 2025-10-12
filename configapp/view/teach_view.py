@@ -1,6 +1,9 @@
+from configapp.models.group_models import Group
+from rest_framework.permissions  import IsAdminUser
 from configapp.serializers.teach_serializer import *
 from configapp.serializers.group_serializer import GroupSerializer
 from configapp.serializers.attendance_serializer import *
+from configapp.serializers.auth_user_serializer import AccountSerializer
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import Response
@@ -9,7 +12,8 @@ from collections import defaultdict
 
 
 class TeacherApiView(APIView):
-    def get(self, request, pk):
+    permission_classes = [IsAdminUser]
+    def get(self, request, pk=None):
         if pk:
             try:
                 teacher = Teacher.objects.get(pk=pk)
@@ -39,6 +43,7 @@ class TeacherCreateAPI(APIView):
     
 
 class UpdateTeacherAPI(APIView):
+    @swagger_auto_schema(request_body=TeacherSeriallizer)
     def put(self, request, pk):
         try:
             teacher = Teacher.objects.get(pk=pk)
@@ -69,30 +74,23 @@ class GetTeachersByIdsAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 class TeacherGroupsAPIView(APIView):
-    def get(self, request, student_id):
+    def get(self, request, teacher_id):
         try:
-            teacher = Teacher.objects.get(id=student_id)
+            teacher = Teacher.objects.get(id=teacher_id)
         except Teacher.DoesNotExist:
             return Response(
                 {"detail": "Bunday o'qituvchi topilmadi"},
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        groups = teacher.group.all()  
+        groups = teacher.group.all() 
+        print(groups) 
         serializer = GroupSerializer(groups, many=True)
         return Response({
-            "student": teacher.user.username,
             "groups": serializer.data
         }, status=status.HTTP_200_OK)
     
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from configapp.models.teach_models import Teacher
-from configapp.models.group_models import Group
-from configapp.serializers.group_serializer import GroupSerializer
-from rest_framework.permissions  import IsAdminUser
 
 class TeacherGroupDetailView(APIView):
     permission_classes = [IsAdminUser]
@@ -157,19 +155,10 @@ class StudentAPIView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# class StudentAPIView(APIView):
-#     @swagger_auto_schema(request_body=StudentSerializer)
-#     def post(self, request):
-#         serializer = StudentSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             serializer.save()
-#             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class StudentsListAPI(APIView):
     permission_classes = [IsAdminUser]
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 student = Student.objects.get(pk=pk)
@@ -210,13 +199,16 @@ class UsersListAPIVIew(APIView):
     def get(self, request):
         teachers = Teacher.objects.all()
         students = Student.objects.all()
+        accounts = AccountModel.objects.all()
 
         teacher_serializer = TeacherSeriallizer(teachers, many=True)
         student_serializer = StudentSerializer(students, many=True)
+        account_Serializer = AccountSerializer(accounts, many=True)
 
         data = {
             "teachers": teacher_serializer.data,
-            "students": student_serializer.data
+            "students": student_serializer.data,
+            "accounts": account_Serializer.data
         }
 
         return Response(data=data, status=status.HTTP_200_OK)
@@ -233,10 +225,33 @@ class SuperUserAPIView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    
 class DeleteUserAPIView(APIView):
     permission_classes = [IsAdminUser]
-    def post(self, request, pk):
+    def delete(self, request, pk):
         user = AccountModel.objects.get(pk=pk)
+        if user:
+            user.delete()
+            return Response({"message":"User o'chirildi"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"message":"User topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+        
+    
+class DeleteTeacherAPIView(APIView):
+    permission_classes = [IsAdminUser]
+    def delete(self, request, pk):
+        user = Teacher.objects.get(pk=pk)
+        if user:
+            user.delete()
+            return Response({"message":"User o'chirildi"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"message":"User topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+        
+    
+class DeleteStudentAPIView(APIView):
+    permission_classes = [IsAdminUser]
+    def delete(self, request, pk):
+        user = Student.objects.get(pk=pk)
         if user:
             user.delete()
             return Response({"message":"User o'chirildi"}, status=status.HTTP_204_NO_CONTENT)
@@ -271,10 +286,10 @@ class StudentGroupsAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        groups = student.group.all()  
+        groups = student.s_group.all()  
         serializer = GroupSerializer(groups, many=True)
         return Response({
-            "student": student.user.username,
+            "student": student.username,
             "groups": serializer.data
         }, status=status.HTTP_200_OK)
     
@@ -300,6 +315,6 @@ class StudentAttendanceByMonthAPIView(APIView):
             grouped_data[month_key].append(att)
 
         return Response({
-            "student": student.user.username ,
+            "student": student.username ,
             "attendance_by_month": grouped_data
         }, status=status.HTTP_200_OK)

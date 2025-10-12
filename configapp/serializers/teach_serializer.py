@@ -28,3 +28,7 @@ class SuperUserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = AccountModel.objects.create_superuser(**validated_data)
         return user
+    
+
+class AddStudenttoGroupSerializer(serializers.Serializer):
+    student_id = serializers.CharField()

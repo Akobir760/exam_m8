@@ -16,7 +16,7 @@ class PaymentTypeCreateAPI(APIView):
     
 class PaymentTypeListAPI(APIView):
     permission_classes = [IsAdminUser]
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 payment_type = PaymentType.objects.get(pk=pk)
@@ -79,7 +79,7 @@ class PaymentCteateAPI(APIView):
 class PaymnetListAPI(APIView):
     permission_classes = [IsAdminUser]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 payment = Payment.objects.get(pk=pk)
@@ -96,13 +96,8 @@ class PaymnetListAPI(APIView):
         
         payments = Payment.objects.all()
         serializer = PaymentSeriaizer(payments, many=True)
-
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PaymentDelAPI(APIView):

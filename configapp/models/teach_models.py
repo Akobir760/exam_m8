@@ -4,6 +4,7 @@ from django.db import models
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.hashers import make_password, check_password
 
 class OTPCode(models.Model):
     email = models.EmailField()
@@ -26,23 +27,45 @@ class Course(models.Model):
 
 
 class Teacher(models.Model):
-    user = models.ForeignKey("configapp.AccountModel", on_delete=models.CASCADE)
+    username = models.CharField(max_length=255, unique=True, default="test_user")
+    full_name = models.CharField(max_length=50, null=True, blank=True)
+    email = models.EmailField(blank=True, null=True)
+    password = models.CharField(default=123)
     descriptions = models.CharField(max_length=500, null=True, blank=True)
     is_staff = models.BooleanField(default=True)
     is_manager = models.BooleanField(default=True)
+    otp = models.CharField(blank=True, null=True)
+    group = models.ManyToManyField('configapp.Group', related_name='teachers', blank=True)
 
 
     def __str__(self):
         return self.full_name
+    
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
 
 class Student(models.Model):
-    user = models.ForeignKey("configapp.AccountModel", on_delete=models.CASCADE)
-    # organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    username = models.CharField(max_length=255, unique=True, default="test_user")
+    full_name = models.CharField(max_length=50, null=True, blank=True)
+    email = models.EmailField(blank=True, null=True, unique=True)
+    passwords = models.CharField(default=123)
     is_activate = models.BooleanField(default=False)
-    group = models.ManyToManyField("configapp.Group",related_name='group')
     descriptions = models.CharField(max_length=500, null=True, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
+    otp = models.CharField(blank=True, null=True)
+    s_group = models.ManyToManyField('configapp.Group', related_name='students', blank=True)
 
     def __str__(self):
         return self.full_name
+    
+    def set_password(self, raw_password):
+        self.passwords = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.passwords)
 

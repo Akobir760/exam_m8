@@ -7,7 +7,7 @@ from drf_yasg.utils import swagger_auto_schema
 class TableListAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 table = TableModel.objects.get(pk=pk)
@@ -44,7 +44,7 @@ class TableDelAPI(APIView):
         try:
             table = TableModel.objects.get(pk=pk)
         except TableModel.DoesNotExist:
-            return Response({"message":"Jadval topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message":"Jadval topilmadi!"}, status=status.HTTP_200_OK)
         
         table.delete()
         return Response({"message":"Jadval o'chirildi!"})
@@ -52,6 +52,7 @@ class TableDelAPI(APIView):
 
 class TableUpdateAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
+    @swagger_auto_schema(request_body=TableSerializer)
 
     def put(self, request, pk):
         try:
@@ -71,7 +72,7 @@ class TableUpdateAPI(APIView):
 class TableTypeListAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
 
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 table_type = TableTypeModel.objects.get(pk=pk)
@@ -107,13 +108,14 @@ class TableTypeDelAPI(APIView):
         try:
             table_type = TableTypeModel.objects.get(pk=pk)
         except TableTypeModel.DoesNotExist:
-            return Response({"message":"Jadval turi topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message":"Jadval turi topilmadi"}, status=status.HTTP_200_OK)
         
         table_type.delete()
         return Response({"message":"Jadval turi o'chirildi"})
 
 class TableTypeUpdate(APIView):
     permission_classes = [IsManagerOrAdmin]
+    @swagger_auto_schema(request_body=TableTypeSerializer)
 
     def put(self, request, pk):
         try:

@@ -8,7 +8,7 @@ from configapp.models.permmissions import *
 
 class GroupsListAPI(APIView):
     permission_classes = [IsAdminUser]
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 group = Group.objects.get(pk=pk)
@@ -37,7 +37,7 @@ class GroupCreateAPIView(APIView):
 
 class GroupDeleteAPI(APIView):
     permission_classes = [IsAdminUser]
-    def post(self, request, pk):
+    def delete(self, request, pk):
         group = Group.objects.get(pk=pk)
         if group:
             group.delete()
@@ -47,6 +47,7 @@ class GroupDeleteAPI(APIView):
         
 class GroupUpdateAPI(APIView):
     permission_classes = [IsManagerOrAdmin]
+    @swagger_auto_schema(request_body=GroupSerializer)
     def put(self, request, pk):
         try:
             group = Group.objects.get(pk=pk)
@@ -59,17 +60,19 @@ class GroupUpdateAPI(APIView):
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
         
 
+from configapp.serializers.teach_serializer import AddStudenttoGroupSerializer
 
 class AddStudentToGroupAPIView(APIView):
     permission_classes = [IsAdminUser]
-    def post(self, request, id):  
+    @swagger_auto_schema(request_body=AddStudenttoGroupSerializer)
+    def post(self, request, pk):  
         student_id = request.data.get("student_id")
 
         if not student_id:
             return Response({"detail": "student_id yuborilmadi"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            group = Group.objects.get(id=id)
+            group = Group.objects.get(pk=pk)
         except Group.DoesNotExist:
             return Response({"detail": "Bunday group topilmadi"}, status=status.HTTP_404_NOT_FOUND)
 

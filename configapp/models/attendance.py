@@ -13,10 +13,11 @@ class AttendanceLevel(models.Model):
 
 class Attendance(models.Model):
     level = models.ForeignKey(AttendanceLevel, on_delete=models.RESTRICT)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField()
     updated = models.DateTimeField(auto_now=True)
-    student = models.ForeignKey("configapp.Student", on_delete=models.RESTRICT)
+    students = models.ManyToManyField("configapp.Student", related_name="attendances")
     group = models.ForeignKey("configapp.Group", on_delete=models.RESTRICT)
 
     def __str__(self):
-        return self.level
+        return f"{self.level} - {self.group}"
+

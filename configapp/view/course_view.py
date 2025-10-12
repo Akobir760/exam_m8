@@ -20,7 +20,7 @@ class CourseCreateAPIView(APIView):
 
 class CourseGetAPIView(APIView):
     permission_classes = [IsManagerOrAdmin]
-    def get(self, request, pk):
+    def get(self, request, pk=None):
         if pk:
             try:
                 course = Course.objects.get(pk=pk)
@@ -37,17 +37,13 @@ class CourseGetAPIView(APIView):
                 return Response({"message":"Courselar topilmadi"}, status=status.HTTP_304_NOT_MODIFIED)
             
             serializer = CourseSerializer(courses, many=True)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
             
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
 class CourseDeleteAPI(APIView):
     permission_classes = [IsAdminUser]
-    def post(self, request, pk):
+    def delete(self, request, pk):
         try:
             course = Course.objects.get(pk=pk)
         except:
@@ -59,18 +55,23 @@ class CourseDeleteAPI(APIView):
 
 class CourseChangeAPI(APIView):
     permission_classes = [IsAdminUser]
+    @swagger_auto_schema(request_body=CourseSerializer)
     def put(self, request, pk):
         try:
             course = Course.objects.get(pk=pk)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        serializer = CourseSerializer(course)
-        if serializer.is_valid(raise_exception=True):
+        
+        serializer = CourseSerializer(instance = course, data=request.data)
+        if serializer.is_valid():
             serializer.save()
+
             return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
     
 
 class GetGroupsByIdsApiView(APIView):
