@@ -1,10 +1,12 @@
 from drf_yasg import openapi
 from rest_framework.views import APIView
 from configapp.serializers.attendance_serializer import *
+from configapp.serializers.teach_serializer import *
 from rest_framework.views import Response, status
 from drf_yasg.utils import swagger_auto_schema
 from configapp.models.permmissions import *
 from django.utils.dateparse import parse_datetime
+from configapp.models.teach_models import *
 
 
 class AttendanceRetrieveAPiView(APIView):
@@ -130,21 +132,22 @@ class AttendanceLevelUpdateAPI(APIView):
         else:
             return Response({"message":"Davomat statusi topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
         
-
+from django.db.models import Count, Case, When, IntegerField
 
 class AttendanceFilterView(APIView):
 
-    @swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'start_date': openapi.Schema(type=openapi.TYPE_STRING, format='date-time', description="Boshlanish sanasi"),
-                'end_date': openapi.Schema(type=openapi.TYPE_STRING, format='date-time', description="Tugash sanasi"),
-            },
-            required=['start_date', 'end_date']
-        ),
-        responses={200: AttendanceSerializer(many=True)}
-    )
+    # @swagger_auto_schema(
+    #     request_body=openapi.Schema(
+    #         type=openapi.TYPE_OBJECT,
+    #         properties={
+    #             'start_date': openapi.Schema(type=openapi.TYPE_STRING, format='date-time', description="Boshlanish sanasi"),
+    #             'end_date': openapi.Schema(type=openapi.TYPE_STRING, format='date-time', description="Tugash sanasi"),
+    #         },
+    #         required=['start_date', 'end_date']
+    #     ),
+    #     responses={200: StudentSerializer(many=True)}
+    # )
+    @swagger_auto_schema(request_body=Activefilterserializer)
     def post(self, request):
         start_date = request.data.get('start_date')
         end_date = request.data.get('end_date')
@@ -152,6 +155,11 @@ class AttendanceFilterView(APIView):
         if not start_date or not end_date:
             return Response({'error': 'Ikkala sana ham yuborilishi kerak!'}, status=status.HTTP_400_BAD_REQUEST)
 
-        attendances = Attendance.objects.filter(created__range=[start_date, end_date])
-        serializer = AttendanceSerializer(attendances, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        stats = Student.objects.aggregate(
+            activ_count=Count(Case(When(is_activate='active', then=1), output_field=IntegerField())),
+            activmas_count=Count(Case(When(is_activate='activmas', then=1), output_field=IntegerField())),
+            yiqilgan_count=Count(Case(When(is_activate='yiqilgan', then=1), output_field=IntegerField())),
+)
+      
+        # serializer = StudentSerializer(stats, many=True)
+        return Response(stats, status=status.HTTP_200_OK)

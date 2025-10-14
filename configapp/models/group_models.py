@@ -39,7 +39,7 @@ class Table(models.Model):
 class Group(models.Model):
     title = models.CharField(max_length=50, unique=True)
     course = models.ForeignKey("configapp.Course", on_delete=models.RESTRICT,related_name='course')
-    teacher = models.ManyToManyField("configapp.Teacher", related_name='teacher')
+    # teacher = models.ManyToManyField("configapp.Teacher", related_name='teacher')
     # table = models.ForeignKey(Table, on_delete=models.RESTRICT)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)

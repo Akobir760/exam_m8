@@ -51,3 +51,8 @@ class ExamSerializer(serializers.ModelSerializer):
 
 class ExamIdSerializer(serializers.Serializer):
     exam_id = serializers.IntegerField()
+
+
+class Activefilterserializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()

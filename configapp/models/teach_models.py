@@ -53,12 +53,14 @@ class Student(models.Model):
     full_name = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(blank=True, null=True, unique=True)
     passwords = models.CharField(default=123)
-    is_activate = models.BooleanField(default=False)
+    is_activate = models.CharField(default="activmas")
     descriptions = models.CharField(max_length=500, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
     otp = models.CharField(blank=True, null=True)
     s_group = models.ManyToManyField('configapp.Group', related_name='students', blank=True)
+    created = models.DateField(default="2025-09-14")
+    updated = models.DateTimeField(default="2025-09-14")
 
     def __str__(self):
         return self.full_name
