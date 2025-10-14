@@ -9,7 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.views import Response
 from rest_framework import status
 from collections import defaultdict
-
+from configapp.models.permmissions import IsManagerOrAdmin
 
 class TeacherApiView(APIView):
     permission_classes = [IsAdminUser]
@@ -318,3 +318,41 @@ class StudentAttendanceByMonthAPIView(APIView):
             "student": student.username ,
             "attendance_by_month": grouped_data
         }, status=status.HTTP_200_OK)
+    
+
+class ExamCreateView(APIView):
+    permission_classes = [IsManagerOrAdmin]
+    @swagger_auto_schema(request_body=ExamSerializer)
+    def post(self, request):
+        serializer = ExamSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ExamListView(APIView):
+    permission_classes = [IsManagerOrAdmin]
+    def get(self, request):
+        exams = Exam.objects.all()
+        serializer = ExamSerializer(exams, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class FailedStudentsView(APIView):
+    permission_classes = [IsManagerOrAdmin]
+    @swagger_auto_schema(request_body=ExamIdSerializer)
+    def post(self, request):
+        exam_id = request.data.get("exam_id") 
+
+        if not exam_id:
+            return Response({"message": "exam_id kiritilmadi"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            exam = Exam.objects.get(id=exam_id)
+        except Exam.DoesNotExist:
+            return Response({"message": "Imtihon topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+
+        failed_students = exam.failed_students.all()
+        serializer = StudentSerializer(failed_students, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

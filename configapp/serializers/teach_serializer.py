@@ -32,3 +32,22 @@ class SuperUserCreateSerializer(serializers.ModelSerializer):
 
 class AddStudenttoGroupSerializer(serializers.Serializer):
     student_id = serializers.CharField()
+    
+
+
+class ExamSerializer(serializers.ModelSerializer):
+    passed_students = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Student.objects.all()
+    )
+    failed_students = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Student.objects.all()
+    )
+
+    class Meta:
+        model = Exam
+        fields = [
+            'id', 'title', 'date', 'group', 'teacher', 'passed_students', 'failed_students'
+        ]
+
+class ExamIdSerializer(serializers.Serializer):
+    exam_id = serializers.IntegerField()

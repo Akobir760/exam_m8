@@ -69,3 +69,17 @@ class Student(models.Model):
     def check_password(self, raw_password):
         return check_password(raw_password, self.passwords)
 
+class Exam(models.Model):
+    title = models.CharField(max_length=100)
+    group = models.ForeignKey("configapp.Group", on_delete=models.CASCADE, related_name='exams')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='exams')
+    date = models.DateField()
+
+    passed_students = models.ManyToManyField(Student, related_name='passed_exams', blank=True)
+    failed_students = models.ManyToManyField(Student, related_name='failed_exams', blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.group})"

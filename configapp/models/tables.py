@@ -1,6 +1,4 @@
 from django.db import models
-# from configapp.models.teach_models import Teacher
-# from configapp.models.group_models import Group
 
 
 class TableTypeModel(models.Model):

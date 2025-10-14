@@ -126,5 +126,10 @@ urlpatterns = [
     path("payments/payment/<int:pk>/", PaymnetListAPI.as_view()),
     path("payments/payment/<int:pk>/delete/payment/", PaymentDelAPI.as_view()),
     path("payments/payment/<int:pk>/update/payment/", PaymentUpdateAPI.as_view()),
+
+    # EXAM APi's
+    path("exam/create", ExamCreateView.as_view()),
+    path("exam/list", ExamListView.as_view()),
+    path("exam/list/faileds", FailedStudentsView.as_view()),
     
 ]
